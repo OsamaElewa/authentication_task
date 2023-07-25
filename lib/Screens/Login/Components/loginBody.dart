@@ -1,5 +1,5 @@
-import 'dart:ffi';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../../../components/buttons.dart';
@@ -78,7 +78,7 @@ class _LoginBodyState extends State<LoginBody> {
                       controller: emailController,
                       validator: (value) {
                         if (value!.isEmpty) {
-                          displaySnackBar("enter your email");
+                          displaySnackBar(context,"enter your email");
                           emptyArea = true;
                           return "empty";
                         }
@@ -123,7 +123,7 @@ class _LoginBodyState extends State<LoginBody> {
                       controller: passwordController,
                       validator: (value) {
                         if (value!.isEmpty) {
-                          displaySnackBar("enter your password");
+                          displaySnackBar(context,"enter your password");
                           emptyArea = true;
                           return "empty";
                         }
@@ -167,10 +167,10 @@ class _LoginBodyState extends State<LoginBody> {
                         emptyArea = false;
                       }
                       if (emptyArea == false) {
-                        await displaySnackBar("loading");
+                        await displaySnackBar(context,"loading");
                         // TODO: add your code to log in by email & password
                         userLogin(emailController.text, passwordController.text);
-                          Navigator.pushNamed(context, HomePage.routeName);
+
                       }
                     }),
 ///////////////////////////////////////////////////////////////////////////////////
@@ -203,16 +203,38 @@ class _LoginBodyState extends State<LoginBody> {
 
   // TODO: Create Your Functions Here
   void userLogin(
-      String email,
-      String password
-      ) {
-    FirebaseAuth.instance.signInWithEmailAndPassword(
-        email: email,
-        password: password
-    ).then((value) {
-      print('the process is done successfully');
-    }).catchError((error){
-      print(error.toString());
-    });
-  }
+      String email, String password) async {
+    try {
+      bool isFound =false;
+      FirebaseAuth.instance.signInWithEmailAndPassword(
+          email: email,
+          password: password
+      ).then((value) async{
+        FirebaseFirestore.instance
+            .collection('users')
+            .get()
+            .then((QuerySnapshot querySnapshot) {
+          querySnapshot.docs.forEach((doc) {
+            if(doc["userEmail"] == email.trim() && doc["userPassword"] == password.trim()){
+              isFound=true;
+              displaySnackBar(context, 'the process is done successfully');
+              Navigator.pushNamed(context, HomePage.routeName);
+              return ;
+            }
+          });
+          if(isFound !=true){
+            displaySnackBar(context,"login with email and password failed.");
+          }
+        }
+        );
+      }).catchError((error)async {
+        await displaySnackBar(context,"login with email and password failed.");
+
+      });
+    } catch (e) {
+      await displaySnackBar(context,"login with email and password failed.");
+      debugPrint('login with email and password failed: ${e}');
+      rethrow;
+    }
+   }
 }
