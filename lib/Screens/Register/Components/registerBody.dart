@@ -74,7 +74,7 @@ class _RegisterBodyState extends State<RegisterBody> {
                           controller: nameController,
                           validator: (value) {
                             if (value!.isEmpty) {
-                              displaySnackBar("enter your email");
+                              displaySnackBar(context,"enter your email");
                               emptyArea = true;
                               return "empty";
                             }
@@ -117,7 +117,7 @@ class _RegisterBodyState extends State<RegisterBody> {
                           controller: emailController,
                           validator: (value) {
                             if (value!.isEmpty) {
-                              displaySnackBar("enter your email");
+                              displaySnackBar(context,"enter your email");
                               emptyArea = true;
                               return "empty";
                             }
@@ -161,7 +161,7 @@ class _RegisterBodyState extends State<RegisterBody> {
                           controller: passwordController,
                           validator: (value) {
                             if (value!.isEmpty) {
-                              displaySnackBar("enter your email");
+                              displaySnackBar(context,"enter your email");
                               emptyArea = true;
                               return "empty";
                             }
@@ -203,7 +203,7 @@ class _RegisterBodyState extends State<RegisterBody> {
                             emptyArea = false;
                           }
                           if (emptyArea == false) {
-                            await displaySnackBar("loading");
+                            await displaySnackBar(context,"loading");
                             // TODO: add your code to register by email & password and store the user data in firestore
                             userRegister(nameController.text, emailController.text, passwordController.text);
 
@@ -247,7 +247,10 @@ class _RegisterBodyState extends State<RegisterBody> {
       ).then((value) {
         createUser(name, email, password, value.user!.uid);
         print('the process is done successfully2');
+        displaySnackBar(context,'the process is done successfully');
+        Navigator.pushNamed(context, HomePage.routeName);
     }).catchError((error){
+      displaySnackBar(context,error.toString());
       print(error.toString());
     });
   }
@@ -266,10 +269,7 @@ class _RegisterBodyState extends State<RegisterBody> {
       'userPassword' : password
     }).then((value) {
       print('the process is done successfuly');
-      displaySnackBar('the process is done successfully');
-      Navigator.pushNamed(context, HomePage.routeName);
     }).catchError((error){
-      displaySnackBar(error.toString());
       print(error.toString());
     });
   }

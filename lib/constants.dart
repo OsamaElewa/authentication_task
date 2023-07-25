@@ -25,8 +25,8 @@ const FontWeight commonTextWeight =
 GlobalKey<ScaffoldMessengerState> scaffoldMessengerKey =
 GlobalKey<ScaffoldMessengerState>();
 
-displaySnackBar(String text) {
-  scaffoldMessengerKey.currentState?.showSnackBar(SnackBar(
+displaySnackBar(context,String text) {
+  ScaffoldMessenger.of(context).showSnackBar(SnackBar(
     content: Text(text),
   ));
 }

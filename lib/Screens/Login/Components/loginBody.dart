@@ -1,4 +1,3 @@
-import 'dart:ffi';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -78,7 +77,7 @@ class _LoginBodyState extends State<LoginBody> {
                       controller: emailController,
                       validator: (value) {
                         if (value!.isEmpty) {
-                          displaySnackBar("enter your email");
+                          displaySnackBar(context,"enter your email");
                           emptyArea = true;
                           return "empty";
                         }
@@ -123,7 +122,7 @@ class _LoginBodyState extends State<LoginBody> {
                       controller: passwordController,
                       validator: (value) {
                         if (value!.isEmpty) {
-                          displaySnackBar("enter your password");
+                          displaySnackBar(context,"enter your password");
                           emptyArea = true;
                           return "empty";
                         }
@@ -167,10 +166,9 @@ class _LoginBodyState extends State<LoginBody> {
                         emptyArea = false;
                       }
                       if (emptyArea == false) {
-                        await displaySnackBar("loading");
+                        await displaySnackBar(context,"loading");
                         // TODO: add your code to log in by email & password
                         userLogin(emailController.text, passwordController.text);
-                          Navigator.pushNamed(context, HomePage.routeName);
                       }
                     }),
 ///////////////////////////////////////////////////////////////////////////////////
@@ -211,8 +209,11 @@ class _LoginBodyState extends State<LoginBody> {
         password: password
     ).then((value) {
       print('the process is done successfully');
+      displaySnackBar(context, 'the process is done successfully');
+      Navigator.pushNamed(context, HomePage.routeName);
     }).catchError((error){
       print(error.toString());
+      displaySnackBar(context, error.toString());
     });
   }
 }
