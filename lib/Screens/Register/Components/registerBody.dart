@@ -269,10 +269,7 @@ class _RegisterBodyState extends State<RegisterBody> {
       'userPassword' : password
     }).then((value) {
       print('the process is done successfuly');
-      displaySnackBar('the process is done successfully');
-      Navigator.pushNamed(context, HomePage.routeName);
     }).catchError((error){
-      displaySnackBar(error.toString());
       print(error.toString());
     });
   }
