@@ -206,7 +206,7 @@ class _RegisterBodyState extends State<RegisterBody> {
                             await displaySnackBar("loading");
                             // TODO: add your code to register by email & password and store the user data in firestore
                             userRegister(nameController.text, emailController.text, passwordController.text);
-                               Navigator.pushNamed(context, HomePage.routeName);
+
                           }
                         }),
 ///////////////////////////////////////////////////////////////////////////////////
@@ -266,7 +266,10 @@ class _RegisterBodyState extends State<RegisterBody> {
       'userPassword' : password
     }).then((value) {
       print('the process is done successfuly');
+      displaySnackBar('the process is done successfully');
+      Navigator.pushNamed(context, HomePage.routeName);
     }).catchError((error){
+      displaySnackBar(error.toString());
       print(error.toString());
     });
   }
