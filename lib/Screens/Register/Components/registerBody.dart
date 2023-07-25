@@ -74,7 +74,7 @@ class _RegisterBodyState extends State<RegisterBody> {
                           controller: nameController,
                           validator: (value) {
                             if (value!.isEmpty) {
-                              displaySnackBar(context,"enter your email");
+                              displaySnackBar(context,"enter your name");
                               emptyArea = true;
                               return "empty";
                             }
@@ -161,7 +161,7 @@ class _RegisterBodyState extends State<RegisterBody> {
                           controller: passwordController,
                           validator: (value) {
                             if (value!.isEmpty) {
-                              displaySnackBar(context,"enter your email");
+                              displaySnackBar(context,"enter your password");
                               emptyArea = true;
                               return "empty";
                             }
