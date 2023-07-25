@@ -202,19 +202,38 @@ class _LoginBodyState extends State<LoginBody> {
 
   // TODO: Create Your Functions Here
   void userLogin(
-      String email,
-      String password
-      ) {
-    FirebaseAuth.instance.signInWithEmailAndPassword(
-        email: email,
-        password: password
-    ).then((value) {
-      print('the process is done successfully');
-      displaySnackBar(context, 'the process is done successfully');
-      Navigator.pushNamed(context, HomePage.routeName);
-    }).catchError((error){
-      displaySnackBar(context, error.toString());
-      print(error.toString());
-    });
-  }
+      String email, String password) async {
+    try {
+      bool isFound =false;
+      FirebaseAuth.instance.signInWithEmailAndPassword(
+          email: email,
+          password: password
+      ).then((value) async{
+        FirebaseFirestore.instance
+            .collection('users')
+            .get()
+            .then((QuerySnapshot querySnapshot) {
+          querySnapshot.docs.forEach((doc) {
+            if(doc["userEmail"] == email.trim() && doc["userPassword"] == password.trim()){
+              isFound=true;
+              displaySnackBar(context, 'the process is done successfully');
+              Navigator.pushNamed(context, HomePage.routeName);
+              return ;
+            }
+          });
+          if(isFound !=true){
+            displaySnackBar(context,"login with email and password failed.");
+          }
+        }
+        );
+      }).catchError((error)async {
+        await displaySnackBar(context,"login with email and password failed.");
+
+      });
+    } catch (e) {
+      await displaySnackBar(context,"login with email and password failed.");
+      debugPrint('login with email and password failed: ${e}');
+      rethrow;
+    }
+    }
 }
